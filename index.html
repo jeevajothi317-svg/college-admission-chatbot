@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>College AI Assistant</title>
+<style>
+body{
+font-family: Arial;
+background:#f2f2f2;
+}
+
+#chatbox{
+width:400px;
+margin:50px auto;
+background:white;
+padding:20px;
+border-radius:10px;
+}
+
+#messages{
+height:300px;
+overflow-y:scroll;
+border:1px solid #ccc;
+padding:10px;
+}
+
+input{
+width:75%;
+padding:10px;
+}
+
+button{
+padding:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="chatbox">
+<h2>College Admission Assistant</h2>
+
+<div id="messages"></div>
+
+<input id="userInput" type="text" placeholder="Ask something...">
+<button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+
+console.log("Script working");
+
+function sendMessage(){
+
+let input = document.getElementById("userInput").value;
+
+let messages = document.getElementById("messages");
+
+messages.innerHTML += "<p><b>You:</b> " + input + "</p>";
+
+fetch("/chat",{
+method: "POST",
+headers:{
+"Content-Type":"application/json"
+},
+body: JSON.stringify({message: input})
+})
+.then(res => res.json())
+.then(data => {
+messages.innerHTML += "<p><b>Bot:</b> " + data.response + "</p>";
+});
+
+document.getElementById("userInput").value = "";
+
+}
+
+document.getElementById("userInput").addEventListener("keypress", function(event){
+if(event.key === "Enter"){
+sendMessage();
+}
+});
+
+</script>
